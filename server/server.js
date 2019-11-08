@@ -23,9 +23,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('newMessage',generateMessage('Admin', 'New user join'));
 
 
-    socket.on('createMessage', (msg) => {
+    socket.on('createMessage', (msg, callback) => {
         console.log(msg);
         io.emit('newMessage', generateMessage(msg.from, msg.text));
+        callback('This is the string');
     });
 
 

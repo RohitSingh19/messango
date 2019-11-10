@@ -4,7 +4,8 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 
-const {generateMessage, generateLocationMessage} = require('./utils/message');
+
+const {generateMessage, generateLocationMessage, generateMessageTemplate} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
 const {Users} = require('./utils/users');
 
@@ -41,11 +42,17 @@ io.on('connection', (socket) => {
         callback();
     });
 
+    socket.on('typing', (params)=> {
+        socket.broadcast
+            .to(params.room).
+             emit('notifyTyping', generateMessage(`${params.name}`, `admin`));
+    })
+
     socket.on('createMessage', (msg, callback) => {
-        var user = users.getUser(socket.id);
-        
+        var user = users.getUser(socket.id);        
         if(user && isRealString(msg.text)) {
-            io.to(user.room).emit('newMessage', generateMessage(user.name, msg.text));
+            io.to(user.room).emit('newMessage',
+                 generateMessageTemplate(user.name, msg.text, socket.id));
         }
         callback();
     });

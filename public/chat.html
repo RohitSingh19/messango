@@ -11,17 +11,48 @@
 
 <body class="chat">
     <div class="chat__sidebar">
-        <h3>People</h3>
+
+        <!-- <script id="group_members_template" type="text/template">
+            
+            <div class="group_name">
+                    <div>
+                        {{room}}
+                        </div>        
+            </div>
+
+
+        </script> -->
+        <!-- <div id="target">                 -->
+        <h3 id="target" style="text-align: center;"></h3>
+        <!-- </div> -->
+        <script id="template" type="x-tmpl-mustache">
+             {{ name }}
+        </script>
+
+        <!-- <h3>Group Members</h3> -->
+
+
         <div id="users"></div>
     </div>
 
     <div class="chat__main">
-        <ol id="messages" class="chat__messages">
-        </ol>
-
+        <div class="chat__header">
+            <span id="typed"></span>
+            <div id="typed-strings">
+                    <p>Typed.js is a <strong>JavaScript</strong> library.</p>
+               </div>               
+        </div>
+        
+    <ol id="messages" class="chat__messages">
+    </ol>
+        
+        
+        <!-- <ol id="messages_right" style="text-align: right;" class="chat__messages">
+        </ol> -->
+        <div class="notifyArea"></div>
         <div class="chat__footer">
             <form id="message-form">
-                <input type="text" name="message" placeholder="Type your message here.."
+                <input type="text" name="message" id="msgBox" placeholder="Type your message here.."
                  autofocus autocomplete="off"/>
                 <button>Send</button>
             </form>
@@ -54,7 +85,17 @@
          </div>
         </li>
     </script>
-
+    
+    <!-- <script>
+            var typed = new Typed('#typed', {
+              stringsElement: '#typed-strings'
+            });
+            var typed = new Typed('#typed',{
+                    stringsElement: '#typed-strings',
+                    backSpeed: 40,
+                    typeSpeed: 40
+            });
+    </script> -->
 
 
 </body >
@@ -64,5 +105,7 @@
 <script src="./js/libs/mustache.js"></script>
 <script src="./js/libs/deparam.js"></script>
 <script src="./js/chat.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script> -->
+<script src="./js/libs/typed.js"></script>
 
 </html>

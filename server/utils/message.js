@@ -17,6 +17,15 @@ var generateLocationMessage = (from, lat, long) => {
     };
 };
 
+var generateMessageTemplate = (from, text, socketId) => {
+    return {
+        from,
+        text,
+        createdAt: moment().valueOf(),
+        socketId
+    }
+}
 
 
-module.exports = {generateMessage, generateLocationMessage}
+
+module.exports = {generateMessage, generateLocationMessage, generateMessageTemplate}

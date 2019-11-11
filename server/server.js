@@ -32,11 +32,14 @@ io.on('connection', (socket) => {
 
         socket.join(params.room);
         users.removeUser(socket.id);
+        
         users.addUser(socket.id, params.name, params.room);
         //socket.leave(params.room)
 
         io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+        
         socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+    
         socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin', `${params.name} has joined.`));
 
         callback();
@@ -58,11 +61,15 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createLocationMessage', (coords) => {
-        var user = users.getUser(socket.id);
+        var user = users.getUser(socket.id);            
         if(user) {
             io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude,coords.longitude));
         }
-        
+    });
+
+    socket.on('base64_file', function (data, params) {      
+        var user = users.getUser(socket.id); 
+        io.to(user.room).emit('drawImage', data, params) ;
     });
 
     socket.on('disconnect', () => {
@@ -70,12 +77,19 @@ io.on('connection', (socket) => {
         if(user) {
             io.to(user.room).emit('updateUserList', users.getUserList(user.room));
             io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
+        
+
         }
     });
+
+    
 });
+
+
 
 
 server.listen(port, () => {
     console.log(`Server is up and running on ${port}`);
 });
+
 

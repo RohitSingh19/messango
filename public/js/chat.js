@@ -17,13 +17,14 @@ function scrollToBottom() {
 
 socket.on('connect', function () { 
     var params = jQuery.deparam(window.location.search);
+    
 
     socket.emit('join', params, function(err) {
         if(err) {
             alert(err);
             window.location.href = '/';
         } else {
-            debugger;
+            
             console.log('No Error');   
             var template = $('#template').html();
             Mustache.parse(template);   // optional, speeds up future uses
@@ -42,8 +43,7 @@ socket.on('disconnect', function () {
 
 socket.on('updateUserList', function(users) {
     var ol = jQuery('<ol></ol>');
-    debugger;
-
+    
     users.forEach(function(user) {
         ol.append(jQuery('<li></li>').text(user));
     });
@@ -54,12 +54,61 @@ $("#msgBox").bind("keypress", function(){
     var params = jQuery.deparam(window.location.search);
     socket.emit('typing', params);
 });
+
 socket.on('notifyTyping', function(msg){
     var html = `${msg.from} is typing..`;    
     // jQuery('#messages').append('');    
     console.log(html);
     jQuery('.notifyArea').html(html);    
 });
+
+
+
+
+// public method for encoding an Uint8Array to base64
+function encode (input) {
+    var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    var output = "";
+    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    var i = 0;
+
+    while (i < input.length) {
+        chr1 = input[i++];
+        chr2 = i < input.length ? input[i++] : Number.NaN; // Not sure if the index 
+        chr3 = i < input.length ? input[i++] : Number.NaN; // checks are needed here
+
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+
+        if (isNaN(chr2)) {
+            enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+            enc4 = 64;
+        }
+        output += keyStr.charAt(enc1) + keyStr.charAt(enc2) +
+                  keyStr.charAt(enc3) + keyStr.charAt(enc4);
+    }
+    return output;
+}
+
+$("#upload").change(function(e) {
+    var data = e.originalEvent.target.files[0];
+    readThenSendFile(data);   
+});
+
+function readThenSendFile(data){
+    debugger;
+    var reader = new FileReader();
+    var params = jQuery.deparam(window.location.search);
+    reader.onload = function(evt){        
+        socket.emit('base64_file', data, params);
+    };
+    reader.readAsDataURL(data);
+}
+
+
 
 socket.on('newMessage', function(msg){      
     var formattedTime = moment(msg.createdAt).format('LT');
@@ -70,41 +119,29 @@ socket.on('newMessage', function(msg){
         createdAt: formattedTime
     });   
    
-    var html = `<div class="container">                
-                <h2 class="sender">${msg.from}</h2>
-                </br>
-                <p>${msg.text}</p>
-                <span class="time-right">${formattedTime}</span>
-                </div>`;
+    var params = jQuery.deparam(window.location.search);
 
+    if(params.name === msg.from) {
+        var html = `<div class="container_right pull-right">                
+        <h2 class="sender" style="color:#e6eaee">${msg.from}</h2>
+        </br>
+        <p>${msg.text}</p>
+        <span class="time-right" style="color:#e6eaee">${formattedTime}</span>
+        </div>`;    
+    } else {
+        var html = `<div class="container">                
+        <h2 class="sender">${msg.from}</h2>
+        </br>
+        <p>${msg.text}</p>
+        <span class="time-right">${formattedTime}</span>
+        </div>`;    
+    }
     jQuery('#messages').append(html);    
-
-
-    // if(msg.socketId) {
-    //     if(msg.socketId) {
-    //         jQuery('#messages_right').append(html);        
-    //     } else {
-    //         jQuery('#messages').append(html);    
-    //     }
-    // } else {
-    //     // jQuery('#messages').append(html);    
-
-    // }
-
-
-
-    
     jQuery('.notifyArea').empty();    
     scrollToBottom();
-    
-
-
-    // 
-
-    // var li = jQuery('<li></li>');
-    // li.text(`${msg.from}: ${formattedTime}: ${msg.text}`);
-    // jQuery('#messages').append(li);
 });
+
+
 
 
 socket.on('newLocationMessage', function(message){
@@ -115,15 +152,34 @@ socket.on('newLocationMessage', function(message){
         from: message.from,
         createdAt: formattedTime
     });
-    // var li = jQuery('<li></li>');
-    // var a  = jQuery('<a target="_blank", >My Current location</a>');
-    // li.text(`${message.from}: ${formattedTime} `);
-    // a.attr('href', message.url);
-    // li.append(a);
     jQuery('#messages').append(html);
     jQuery('.notifyArea').empty();    
     scrollToBottom();
 });
+
+
+socket.on('drawImage', function(data, msg) {  
+    var d = new Date();
+    var formattedTime = moment(d).format('LT');
+    var bytes = new Uint8Array(data);
+    var image = document.createElement('img');
+    image.src = 'data:image/png;base64,'+encode(bytes);
+    image.width = "325";
+    image.height = "240";
+
+    var html = `<div class="container">                
+    <h2 class="sender">${msg.name}</h2>
+    </br>
+    ${image.outerHTML}
+    <span class="time-right">${formattedTime}</span>
+    </div>`;    
+
+
+    // console.log(newImage.outerHTML);
+    //document.querySelector('.img').innerHTML = image.outerHTML;//where to insert your image
+    jQuery('#messages').append(html);    
+});
+
 
 jQuery('#message-form').on('submit', function(e) {
     e.preventDefault();
@@ -156,4 +212,6 @@ loctionButton.on('click', function() {
 
 
 
-
+jQuery("#clear-chat").click(function(){
+    jQuery('#messages').empty();    
+});

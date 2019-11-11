@@ -58,6 +58,26 @@ button,button:hover{border:none;color:#fff;padding:10px}.chat__messages,.chat__s
     border-radius: 5px;
     padding: 10px;
     margin: 10px 0;
+    width:350px;
+    
+}
+.container_right {
+    border: 2px solid #dedede;
+    background-color: #2c6082;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    width:350px;
+
+    
+}
+  .container p {
+    width:350px;
+  }
+
+  .container_right p {
+    width:350px;
+    color:#e6eaee;
   }
   
   .darker {
@@ -65,29 +85,33 @@ button,button:hover{border:none;color:#fff;padding:10px}.chat__messages,.chat__s
     background-color: #ddd;
   }
   
+  .container_right::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
   .container::after {
     content: "";
     clear: both;
     display: table;
   }
-  
-  .container img {
+  /* .container img {
     float: left;
     max-width: 60px;
     width: 100%;
     margin-right: 20px;
     border-radius: 50%;
-  }
+  } */
   
-  .container img.right {
+  /* .container img.right {
     float: right;
     margin-left: 20px;
     margin-right:0;
   }
-  
+   */
   .time-right {
     float: right;
-    color: #aaa;
+    color: black;
   }
   
   .time-left {

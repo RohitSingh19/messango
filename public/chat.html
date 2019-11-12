@@ -40,14 +40,17 @@
 
     <div class="chat__main">
         <div class="chat__header">
-            <span id="typed"></span>
-            <div id="typed-strings">
-                    <p>Typed.js is a <strong>JavaScript</strong> library.</p>
-            </div>               
+             <span class="messango"
+                 style="text-align: center; color:#e6eaee; font-family: Arial, Helvetica, sans-serif;">
+                    With Messango</span>
+                 <span class="messango_typed" id="typed"></span> 
         </div>
+    
         
-        <ol id="messages" class="chat__messages">
-        </ol>
+            <ol id="messages" class="chat__messages">
+            </ol>
+        
+        
         
         
         <!-- <ol id="messages_right" style="text-align: right;" class="chat__messages">
@@ -55,13 +58,27 @@
         <div class="notifyArea"></div>
         <div class="chat__footer">
             <form id="message-form">
-                <input type="text" name="message" id="msgBox" placeholder="Type your message here.."
+                <input type="text" name="message" id="msgBox" 
+                 placeholder="Type your message here.."
                  autofocus autocomplete="off"/>
-                <button>Send</button>
+                <button>Send Message</button>
+
+                <img src="./assets/send-location.png" id="send-location" class="hoverable"
+                 style="width: 30px; height:30px" title="Send Location" alt="send_location" />
+              
+               <img src="./assets/upload.png" id="uploadImg" class="hoverable"
+                style="width: 30px; height:30px" title="Upload Image" alt="send_images" />
+                <img src="./assets/delete-button.png" id="clear-chat" class="hoverable"
+                style="width: 30px; height:30px" title="Clear Chat" alt="clear_chat" />
+                <input type="file" id="upload" style="visibility: hidden;">
             </form>
-            <button id="send-location">Send Location</button>
-            <input type="file" id="upload">
-            <button id="clear-chat">Clear Chat</button>
+            
+            <!-- <button id="send-location">Send Location</button> -->
+            
+            <!-- <button id="uploadImg">Uplaod</button> -->
+            
+            <!-- <button id="clear-chat">Clear Chat</button> -->
+            
         </div>
     </div>
 
@@ -110,7 +127,6 @@
 <script src="./js/libs/mustache.js"></script>
 <script src="./js/libs/deparam.js"></script>
 <script src="./js/chat.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script> -->
 <script src="./js/libs/typed.js"></script>
 
 </html>

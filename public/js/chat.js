@@ -1,6 +1,7 @@
 var socket = io();
 
-function scrollToBottom() {    
+function scrollToBottom() {        
+    window.scrollTo(0,jQuery('#messages').scrollHeight);
     var messages = jQuery('#messages');
     var newMessage = messages.children('li:last-child');
     var clientHeight = messages.prop('clientHeight');
@@ -9,9 +10,9 @@ function scrollToBottom() {
     var newMessageHeight = newMessage.innerHeight();
     var lastMessageHeight = newMessage.prev().innerHeight();
 
-    if(clientHeight + scrollTop  + newMessageHeight + lastMessageHeight>= scrollHeight) {
+    // if(clientHeight + scrollTop  + newMessageHeight + lastMessageHeight>= scrollHeight) {
         messages.scrollTop(scrollHeight);
-    }
+    // }
 }
 
 
@@ -146,12 +147,21 @@ socket.on('newMessage', function(msg){
 
 socket.on('newLocationMessage', function(message){
     var formattedTime = moment(message.createdAt).format('LT');
-    var template = jQuery('#location-message-template').html();
-    var html = Mustache.render(template, {
-        url: message.url,
-        from: message.from,
-        createdAt: formattedTime
-    });
+    // var template = jQuery('#location-message-template').html();
+    // var html = Mustache.render(template, {
+    //     url: message.url,
+    //     from: message.from,
+    //     createdAt: formattedTime
+    // });
+
+    var html = `<div class="container">                
+    <h2 class="sender">${message.from}</h2>
+    </br>
+    <a href=${message.url} target="_blank">My Current Location</a>
+    
+    <span class="time-right">${formattedTime}</span>
+    </div>`;    
+
     jQuery('#messages').append(html);
     jQuery('.notifyArea').empty();    
     scrollToBottom();
@@ -173,11 +183,8 @@ socket.on('drawImage', function(data, msg) {
     ${image.outerHTML}
     <span class="time-right">${formattedTime}</span>
     </div>`;    
-
-
-    // console.log(newImage.outerHTML);
-    //document.querySelector('.img').innerHTML = image.outerHTML;//where to insert your image
     jQuery('#messages').append(html);    
+    scrollToBottom();
 });
 
 
@@ -215,3 +222,26 @@ loctionButton.on('click', function() {
 jQuery("#clear-chat").click(function(){
     jQuery('#messages').empty();    
 });
+jQuery("#uploadImg").click(function(){
+    $('#upload').trigger('click');
+});
+
+
+jQuery('document').ready(function(){
+    var typed = new Typed('#typed', {        
+        strings: ['Share Messages', 'Share Your Location','Share Your Photos','Share Your Emotions!!' ],
+        smartBackspace: true,
+        loop: true,
+        loopCount: Infinity,
+        typeSpeed: 50
+      });
+
+      
+})
+
+
+
+
+
+
+

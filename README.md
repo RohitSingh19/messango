@@ -12,3 +12,5 @@ Key features of application
 ! Add real-time location
 ! Delete chat history from screen.
 ```
+
+![image](https://user-images.githubusercontent.com/40027859/169681974-00c0e319-b5e7-4158-837a-6911dd06c8bc.png)
